@@ -58,7 +58,7 @@ const DAY = 2;
 
 let timeline = [];
 const GAS_URL =
-"https://script.google.com/macros/s/AKfycbykXLPo7yOkRlGzwbBA8leKtM4_Qqq_wF9uLB9GwVDpDaYfkJb47is2StaHIp-OLpiR/exec";
+"https://script.google.com/macros/s/AKfycbwj995Kx89a03AbUmvUfjdOJRjVGAQKiJvt1zoBC6myGpVMduFg2la6dAoUtqiO1CZy/exec";
 
 let participant_id = "";
 let study_start = "";
@@ -99,7 +99,9 @@ timeline.push({
 
         participant_id: participant_id,
 
-        day: DAY
+        day: DAY,
+
+         word_order:  word_order
 
       })
 
@@ -138,21 +140,22 @@ timeline.push({
 ------------------------ */
 
 let study_words = [
-"空腹",
-"暴動",
-"口論",
-"悪夢",
-"邪魔",
-"時間",
-"大胆",
-"報道",
-"肥料",
-"黄色",
-"個性",
-"祝日",
-"利益",
-"甘美",
-"人情"
+{id: 31, word: "空腹"},
+{id: 32, word: "暴動"},
+{id: 33, word: "口論"},
+{id: 34, word: "悪夢"},
+{id: 35, word: "邪魔"},
+{id: 36, word: "時間"},
+{id: 37, word: "大胆"},
+{id: 38, word: "報道"},
+{id: 39, word: "肥料"},
+{id: 40, word: "黄色"},
+{id: 41, word: "個性"},
+{id: 42, word: "祝日"},
+{id: 43, word: "利益"},
+{id: 44, word: "甘美"},
+{id: 45, word: "人情"}
+
 ];
 
 /* ------------------------
@@ -160,13 +163,16 @@ let study_words = [
 ------------------------ */
 
 study_words = jsPsych.randomization.shuffle(study_words);
-
+const word_order = study_words.map((item, index) => ({
+  serial_position: index + 1,
+  word_id: item.id,
+  word: item.word
+}));
 /* ------------------------
    単語提示フェーズ
 ------------------------ */
 
-study_words.forEach(function(word){
-
+study_words.forEach(function(item, index){
   /* 注視点 ＋ */
 
   timeline.push({
@@ -195,13 +201,18 @@ study_words.forEach(function(word){
     stimulus: `
       <div class="center-text"
            style="font-size:100px;">
-        ${word}
+        ${item.word}
       </div>
     `,
 
     choices: "NO_KEYS",
 
-    trial_duration: 5000
+    trial_duration: 5000,
+     data: {
+      word_id: item.id,
+      word: item.word,
+      serial_position: index + 1
+    }
 
   });
 
